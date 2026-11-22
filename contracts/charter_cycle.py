@@ -95,16 +95,12 @@ class CharterCycle(gl.Contract):
         _require(len(set(validated)) == len(validated), "Duplicate founder")
         _require(_identity(str(gl.message.sender_address)) in validated,
                  "Deployer must be a founder")
-        self.members = TreeMap()
         for member in validated:
             self.members[member] = True
         self.member_count = u32(len(validated))
         self.constitution = base
         self.constitution_hash = _digest(base)
         self.version = u32(1)
-        self.proposals = TreeMap()
-        self.ballots = TreeMap()
-        self.proposal_index = DynArray[str]()
 
     def _now(self) -> int:
         return int(datetime.now(timezone.utc).timestamp())
