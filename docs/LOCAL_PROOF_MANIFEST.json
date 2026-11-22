@@ -34,8 +34,19 @@
     "run_url": "https://github.com/maho0638/chartercycle-genlayer/actions/runs/45056596343"
   },
   "studionet": {
-    "status": "NOT_RUN",
-    "reason": "Requires separate explicit authorization for real chain transactions/gas"
+    "status": "LIVE_VERIFIED",
+    "chain_id": 61999,
+    "contract": "0x4cc15e0D4C89B57295D5B48eD027908581068C3c",
+    "contract_source_sha256": "626761675678707b17dde12c2c1b21c0630cd1c5bf1d44cd162a7f853d3322f6",
+    "tx_finalized_count": 2,
+    "semantic_result": "COMPATIBLE",
+    "validator_vote_counts": {
+      "agree": 3,
+      "idle": 2
+    },
+    "run_url": "https://github.com/maho0638/chartercycle-genlayer/actions/runs/45057544161",
+    "independent_rpc_url": "https://github.com/maho0638/chartercycle-genlayer/actions/runs/45057971178",
+    "proof_file": "docs/STUDIONET_PROOF.json"
   },
   "github_ci": {
     "status": "PASS",
@@ -50,6 +61,6 @@
     "https://docs.genlayer.com/developers/intelligent-contracts/equivalence-principle",
     "https://docs.genlayer.com/api-references/genlayer-linter"
   ],
-  "release_gate": "CODE_AND_GITHUB_CI_VERIFIED__LIVE_STUDIONET_AND_PORTAL_NOT_AUTHORIZED",
+  "release_gate": "CODE_AND_STUDIONET_VERIFIED__PORTAL_NOT_SUBMITTED",
   "public_before_portal": true
 }

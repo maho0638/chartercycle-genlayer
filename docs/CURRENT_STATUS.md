@@ -15,3 +15,11 @@
 - Both GitHub repositories: **PRIVATE**; switch to Public before Portal submission and verify anonymous accessibility
 
 Real Direct Mode checks are not equivalent to real on-chain consensus.
+
+## Latest superseding release status (2026-11-22)
+
+- **Studionet LIVE VERIFIED**, chain ID 61999, address `0x4cc15e0D4C89B57295D5B48eD027908581068C3c`.
+- Real semantic decision `COMPATIBLE`, validator votes 3 Agree / 2 Idle; 2 write transactions FINALIZED.
+- Canonical run: https://github.com/maho0638/chartercycle-genlayer/actions/runs/45057544161
+- Independent status/votes audit: https://github.com/maho0638/chartercycle-genlayer/actions/runs/45057971178
+- Portal submission not authorized; private repositories must be Public before Portal.

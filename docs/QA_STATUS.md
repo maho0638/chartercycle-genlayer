@@ -15,3 +15,12 @@
 - Both GitHub repositories: **PRIVATE**; switch to Public before Portal submission and verify anonymous accessibility
 
 Real Direct Mode checks are not equivalent to real on-chain consensus.
+
+## Live Studionet verified 2026-11-22
+
+- Real deployed contract: `0x4cc15e0D4C89B57295D5B48eD027908581068C3c`
+- Canonical integration run: https://github.com/maho0638/chartercycle-genlayer/actions/runs/45057544161
+- Independent status and votes audit: https://github.com/maho0638/chartercycle-genlayer/actions/runs/45057971178
+- All 2 submitted writes FINALIZED, real consensus: **3 Agree / 2 Idle**.
+- Evidence and transaction hashes: `docs/STUDIONET_PROOF.json`.
+- IMPORTANT: earlier 'NOT RUN' assertions in pre-live QA history are superseded by this verified live record.

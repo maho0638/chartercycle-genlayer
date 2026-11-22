@@ -1,0 +1,45 @@
+{
+  "schema": "studionet-live-proof-v1",
+  "date": "2026-11-22",
+  "network": "Studionet",
+  "chain_id": 61999,
+  "contract_path": "contracts/charter_cycle.py",
+  "contract_source_sha256": "626761675678707b17dde12c2c1b21c0630cd1c5bf1d44cd162a7f853d3322f6",
+  "contract": "0x4cc15e0D4C89B57295D5B48eD027908581068C3c",
+  "live_test_commit": "17ae831b67c04492c1a580b3ffcf302fcc90e36a",
+  "live_test_status": "SUCCESS",
+  "real_model_and_validators": true,
+  "leader_only": false,
+  "mocked_llm": false,
+  "decision": "COMPATIBLE",
+  "observed_state": "VOTING",
+  "validator_votes": {
+    "agree": 3,
+    "idle": 2
+  },
+  "consensus_rounds": 1,
+  "transactions": {
+    "propose": {
+      "tx_hash": "0xc553d173b6f4758056fa4467909aa8ddf24399b92f5de18bf6232af7d14ec775",
+      "status": "FINALIZED"
+    },
+    "vote": {
+      "tx_hash": "0x96185dadda625dfab9390fbcdb34104952e44683f4b167e182f93cc6b714f278",
+      "status": "FINALIZED"
+    }
+  },
+  "verification": {
+    "live_workflow": "https://github.com/maho0638/chartercycle-genlayer/actions/runs/45057544161",
+    "independent_rpc_workflow": "https://github.com/maho0638/chartercycle-genlayer/actions/runs/45057971178",
+    "readback_assertions": "PASS",
+    "rpc_chain_id": 61999,
+    "all_transactions_status": "FINALIZED",
+    "legacy_rpc": "eth_getTransactionByHash returns consensus_data.votes; gen_getTransactionReceipt and gen_getTransactionData are not exposed on current stable Studionet RPC"
+  },
+  "limitations": [
+    "No third-party professional security audit",
+    "Test proves only covered on-chain paths; 24h time lock was checked in Direct Mode rather than waiting 24h on Studionet",
+    "Studionet state may be reset; preserve machine-readable proof",
+    "Portal submission not executed"
+  ]
+}
