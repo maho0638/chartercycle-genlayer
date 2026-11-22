@@ -71,6 +71,26 @@ def main():
                     data[field]=str(result)[:300]
             except Exception as error:
                 data[field+"_unavailable"]=str(error)[:320]
+        if label in ("CharterCycle/propose", "QuestForge/solve"):
+            try:
+                transaction=rpc("eth_getTransactionByHash",[h])
+                if isinstance(transaction,dict):
+                    consensus=transaction.get("consensus_data") or {}
+                    votes=consensus.get("votes") or {}
+                    if isinstance(votes,dict):
+                        counts={}
+                        for vote in votes.values():
+                            key=str(vote).lower()
+                            counts[key]=counts.get(key,0)+1
+                        data["validator_vote_counts"]=counts
+                        data["validator_vote_total"]=len(votes)
+                    data["consensus_round"]=str(transaction.get("status",""))
+                    data["consensus_history_rounds"]=len(
+                        (transaction.get("consensus_history") or {}).get("consensus_results") or []
+                    )
+                    data["vote_source"]="eth_getTransactionByHash / consensus_data.votes"
+            except Exception as error:
+                data["validator_votes_unavailable"]=str(error)[:300]
         snapshot["transactions"][label]=data
         print("PROOF_"+label.replace("/","_").upper()+"="+json.dumps(data,sort_keys=True),flush=True)
         status_name=status.get("status", status.get("statusName")) if isinstance(status,dict) else status
