@@ -50,3 +50,13 @@ Chain deployment/gas, Portal submission, and any other external action need sepa
 - Full transaction hashes and exact status in `docs/STUDIONET_PROOF.json`.
 
 Portal submission remains **not authorized**, and both private repositories must be made **Public** before submission.
+
+## New 48-hour real governance lifecycle (2026-11-22)
+
+- New Studionet contract: `0x5506E19b990cD9839659855AEC2fcA7c761867e8` (same verified source).
+- Proposal `live_timelock_lifecycle_v1`: **COMPATIBLE**, 2/3 genesis YES votes.
+- All three new transactions **FINALIZED**; validator decision: **3 Agree / 2 Idle**.
+- Voting closes **23 Nov 2026 22:42:10 Türkiye**; enactment permitted after **24 Nov 2026 22:42:10 Türkiye**.
+- Current status: **VOTING** (finalize/enact not yet eligible).
+- [Live two-thirds quorum](https://github.com/maho0638/chartercycle-genlayer/actions/runs/45062190397); [Independent finality audit](https://github.com/maho0638/chartercycle-genlayer/actions/runs/45062392936).
+- Automatic follow-up checks scheduled; no claim of enactment before its on-chain confirmation.
