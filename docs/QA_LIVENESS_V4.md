@@ -1,13 +1,10 @@
-# Chartercycle — liveness/security regression v4
+# CharterCycle — Security/liveness changes (v4)
 
-Scope: contract code and tests only; no website, deploy or transactions.
+Exact contract source SHA-256: `626761675678707b17dde12c2c1b21c0630cd1c5bf1d44cd162a7f853d3322f6`.
 
-- Removed the permanent global lifetime limit on historical objects.
-- Added bounded live-operation controls and eventual capacity recovery.
-- Kept prior stored IDs and records immutable; newly added public methods only.
-- Expanded fake-SDK negative/invariant cases and official Direct Mode tests.
-- Real chain finality remains NOT VERIFIED pending separate authorization.
+- Two proposals per founder per 7-day time window, preventing permanent historical-index exhaustion
+- Permissionless STALE archiving of old competing proposals, including approved timelocks
 
-CI status: pending current code push and GitHub Actions results.
-
-Controls: 2 proposals per genesis founder per 7-day transaction-time window; `archive_obsolete()` permissionlessly settles stale timelocks.
+- Official CI: **SUCCESS**, local 36/36 PASS, Direct Mode 7/7 PASS, GenVM lint PASS.
+- Run: https://github.com/maho0638/chartercycle-genlayer/actions/runs/45056596343
+- No live transaction; Studionet requires explicit permission.

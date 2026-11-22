@@ -1,16 +1,15 @@
 {
-  "format": "genlayer-local-qa-v3",
+  "format": "genlayer-contract-qa-v4",
   "date": "2026-11-22",
   "repo": "chartercycle-genlayer",
   "contract_path": "contracts/charter_cycle.py",
-  "source_sha256": "c5c218ec0e31e4b8edbf120efc3e26a99969126682b98ca062da19296d12b604",
+  "source_sha256": "626761675678707b17dde12c2c1b21c0630cd1c5bf1d44cd162a7f853d3322f6",
   "local_fake_sdk_tests": {
     "status": "PASS",
-    "passed": 30,
-    "total": 30,
-    "commands": [
-      "PYTHONPATH=tests/local python -m pytest tests/local -q"
-    ]
+    "passed": 36,
+    "total": 36,
+    "command": "PYTHONPATH=tests/local pytest tests/local -q",
+    "caveat": "fake GenLayer SDK; not live consensus"
   },
   "python_compile": {
     "status": "PASS"
@@ -21,36 +20,36 @@
   },
   "genvm_lint": {
     "status": "PASS",
-    "official": true,
     "checks": 3,
-    "source": "github_actions",
-    "run_url": "https://github.com/maho0638/chartercycle-genlayer/actions/runs/45045343123"
+    "validation": "PASS",
+    "official": true,
+    "run_url": "https://github.com/maho0638/chartercycle-genlayer/actions/runs/45056596343"
   },
   "official_direct_mode": {
     "status": "PASS",
-    "passed": 5,
-    "total": 5,
+    "passed": 7,
+    "total": 7,
     "validator_reruns": true,
-    "mode": "official_direct_sdk_with_mock_llm",
-    "run_url": "https://github.com/maho0638/chartercycle-genlayer/actions/runs/45045343123"
+    "mocked_llm": true,
+    "run_url": "https://github.com/maho0638/chartercycle-genlayer/actions/runs/45056596343"
   },
   "studionet": {
     "status": "NOT_RUN",
-    "reason": "explicit chain deployment and gas authorization required"
+    "reason": "Requires separate explicit authorization for real chain transactions/gas"
   },
   "github_ci": {
     "status": "PASS",
-    "contract_commit": "bfcd01878357c9fcb399a4fa3c3bf9e9ee2e8714",
-    "run_id": 45045343123,
-    "run_url": "https://github.com/maho0638/chartercycle-genlayer/actions/runs/45045343123",
-    "job_id": 137278622623,
-    "conclusion": "success"
+    "conclusion": "success",
+    "source_commit": "f61c547766dd73f13b6cb833fc49bbfd38a16787",
+    "run_id": 45056596343,
+    "job_id": 137313091589,
+    "run_url": "https://github.com/maho0638/chartercycle-genlayer/actions/runs/45056596343"
   },
   "source_references": [
     "https://docs.genlayer.com/developers/intelligent-contracts/testing",
     "https://docs.genlayer.com/developers/intelligent-contracts/equivalence-principle",
     "https://docs.genlayer.com/api-references/genlayer-linter"
   ],
-  "release_gate": "BLOCKED_ON_STUDIONET_CHAIN_APPROVAL_AND_PUBLIC_PORTAL_REQUIREMENT",
+  "release_gate": "CODE_AND_GITHUB_CI_VERIFIED__LIVE_STUDIONET_AND_PORTAL_NOT_AUTHORIZED",
   "public_before_portal": true
 }
