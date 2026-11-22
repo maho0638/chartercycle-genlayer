@@ -89,3 +89,45 @@ def test_charter_cycle_real_direct_fail_closed(direct_vm, direct_deploy, direct_
     assert json.loads(c.get_proposal('proposal_5'))['status'] == 'BLOCKED'
     with direct_vm.expect_revert('Proposal not open'):
         c.vote('proposal_5', True)
+
+
+def test_charter_periodic_creation_capacity_recovers(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
+    """Actual GenLayer SDK storage model: rate cap renews next period."""
+    direct_vm.warp('2026-11-01T00:00:00Z')
+    direct_vm.sender = direct_alice
+    c = direct_deploy('contracts/charter_cycle.py', BASE, json.dumps([
+        addr(direct_alice), addr(direct_bob), addr(direct_charlie)
+    ]))
+    direct_vm.mock_llm(r'(?s).*proposed DAO charter.*', json.dumps({'verdict': 'COMPATIBLE'}))
+    c.propose('weekly_a', NEXT, 'The public archive should remain transparent and accessible.')
+    c.propose('weekly_b', NEXT, 'The public archive should remain transparent and accessible.')
+    with direct_vm.expect_revert('Founder proposal rate limit exceeded'):
+        c.propose('weekly_c', NEXT, 'The public archive should remain transparent and accessible.')
+    direct_vm.warp('2026-11-09T00:00:00Z')
+    c.propose('weekly_c', NEXT, 'The public archive should remain transparent and accessible.')
+    assert c.get_proposal_count() == 3
+
+
+def test_charter_mark_approved_alternative_stale(direct_vm, direct_deploy, direct_alice, direct_bob, direct_charlie):
+    direct_vm.warp('2026-11-01T00:00:00Z')
+    direct_vm.sender = direct_alice
+    c = direct_deploy('contracts/charter_cycle.py', BASE, json.dumps([
+        addr(direct_alice), addr(direct_bob), addr(direct_charlie)
+    ]))
+    direct_vm.mock_llm(r'(?s).*proposed DAO charter.*', json.dumps({'verdict': 'COMPATIBLE'}))
+    c.propose('competing_a', NEXT, 'A better transparent archive for all existing founders.')
+    c.propose('competing_b', NEXT, 'A second candidate with different wording and clear records.')
+    for sender in [direct_alice, direct_bob]:
+        direct_vm.sender = sender
+        c.vote('competing_a', True)
+        c.vote('competing_b', True)
+    direct_vm.warp('2026-11-02T00:00:00Z')
+    c.finalize('competing_a')
+    c.finalize('competing_b')
+    direct_vm.warp('2026-11-03T00:00:00Z')
+    c.enact('competing_a')
+    direct_vm.sender = direct_charlie
+    c.archive_obsolete('competing_b')
+    assert json.loads(c.get_proposal('competing_b'))['status'] == 'STALE'
+    with direct_vm.expect_revert('Proposal not approved'):
+        c.enact('competing_b')

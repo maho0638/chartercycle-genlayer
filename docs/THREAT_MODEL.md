@@ -9,6 +9,8 @@
 - Every proposal is bound to a charter version and immutable content digest.
 - Enactment changes exactly one version; competing passed proposals cannot overwrite it.
 - No privileged admin escape hatch, treasury or value transfer path.
+- A per-founder, per-7-day proposal quota replaces the old global lifetime cap; historical proposal IDs remain immutable.
+- Anyone can mark competing proposals from an obsolete charter version as STALE, including previously approved timelocks.
 
 ## Dependent on honest validator majority / semantic classification
 
@@ -23,4 +25,6 @@
 - No external funds, arbitrary execution or cross-contract state mutations.
 - Blockchain time is transaction time, not external wall-clock time.
 - There is no automated executor: someone must call `finalize` and `enact` after their respective deadlines.
-- Contract source lint/GenVM deployment is required before a security or compatibility claim.
+- The proposal index remains bounded by the largest u32 count and is not economically protected against many distinct funded wallets; founders are trusted participants.
+- The 7-day proposal quota uses transaction timestamps and resets by integer time period, so a boundary can allow proposals close together.
+- A successful Direct Mode test is not live Studionet settlement. Actual deployment and validator finality still require separate consent.

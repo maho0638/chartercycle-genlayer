@@ -10,7 +10,11 @@ from datetime import datetime, timezone
 from genlayer import *
 
 MAX_MEMBERS = 15
-MAX_PROPOSALS = 128
+# Bound weekly proposal creation per founder without imposing a permanent
+# lifetime ceiling on the constitutional governance process.
+PROPOSAL_PERIOD_SECONDS = 7 * 24 * 60 * 60
+MAX_PROPOSALS_PER_MEMBER_PERIOD = 2
+MAX_INDEX_ENTRIES = 2**32 - 1
 MIN_CHARTER = 60
 MAX_CHARTER = 2400
 MIN_REASON = 16
@@ -82,6 +86,7 @@ class CharterCycle(gl.Contract):
     proposals: TreeMap[str, str]
     ballots: TreeMap[str, bool]
     proposal_index: DynArray[str]
+    proposals_per_period: TreeMap[str, u32]
 
     def __init__(self, constitution: str, founders_json: str):
         base = _text(constitution, MIN_CHARTER, MAX_CHARTER, "Charter")
@@ -160,7 +165,15 @@ class CharterCycle(gl.Contract):
         _require(all(ch.isalnum() and ord(ch) < 128 or ch in "_-" for ch in proposal_id),
                  "Proposal ID must be ASCII alphanumeric, underscore or dash")
         _require(self.proposals.get(proposal_id, "") == "", "Duplicate proposal")
-        _require(len(self.proposal_index) < MAX_PROPOSALS, "Proposal capacity exhausted")
+        _require(len(self.proposal_index) < MAX_INDEX_ENTRIES, "Proposal index exhausted")
+        # The period is derived from the transaction timestamp, not the model;
+        # each founder receives fresh capacity periodically, even if every old
+        # proposal was blocked or rejected. Proposal IDs remain globally unique.
+        now = self._now()
+        rate_key = str(now // PROPOSAL_PERIOD_SECONDS) + ":" + proposer
+        rate_count = int(self.proposals_per_period.get(rate_key, u32(0)))
+        _require(rate_count < MAX_PROPOSALS_PER_MEMBER_PERIOD,
+                 "Founder proposal rate limit exceeded")
         new_text = _text(replacement, MIN_CHARTER, MAX_CHARTER, "Replacement charter")
         motivation = _text(rationale, MIN_REASON, MAX_REASON, "Rationale")
         _require(_digest(new_text) != self.constitution_hash, "Replacement unchanged")
@@ -181,6 +194,7 @@ class CharterCycle(gl.Contract):
             "executed_at": 0,
         })
         self.proposal_index.append(proposal_id)
+        self.proposals_per_period[rate_key] = u32(rate_count + 1)
 
     @gl.public.write
     def vote(self, proposal_id: str, support: bool) -> None:
@@ -228,6 +242,21 @@ class CharterCycle(gl.Contract):
         self.version = u32(int(self.version) + 1)
         proposal["status"] = "ENACTED"
         proposal["executed_at"] = self._now()
+        self.proposals[proposal_id] = _serialize(proposal)
+
+    @gl.public.write
+    def archive_obsolete(self, proposal_id: str) -> None:
+        """Permissionlessly settle outdated voting/timelock proposals as STALE.
+
+        After a different charter is enacted, a competing proposal cannot
+        execute, but its on-chain status should also reflect this fact.
+        """
+        proposal = self._proposal(proposal_id)
+        _require(proposal["status"] in ("VOTING", "TIMELOCK"),
+                 "Proposal is already terminal")
+        _require(proposal["base_version"] < int(self.version),
+                 "Proposal is not obsolete")
+        proposal["status"] = "STALE"
         self.proposals[proposal_id] = _serialize(proposal)
 
     @gl.public.view
