@@ -1,0 +1,45 @@
+{
+  "format": "genlayer-local-qa-v3",
+  "date": "2026-11-22",
+  "repo": "chartercycle-genlayer",
+  "contract_path": "contracts/charter_cycle.py",
+  "source_sha256": "9385a0192864e8314546d16aa77278303c576404ecbba391164ea60270778231",
+  "local_fake_sdk_tests": {
+    "status": "PASS",
+    "passed": 30,
+    "total": 30,
+    "commands": [
+      "PYTHONPATH=tests/local python -m pytest tests/local -q"
+    ]
+  },
+  "python_compile": {
+    "status": "PASS"
+  },
+  "custom_ast_audit": {
+    "status": "PASS",
+    "official": false
+  },
+  "genvm_lint": {
+    "status": "NOT_RUN",
+    "reason": "official linter unavailable"
+  },
+  "official_direct_mode": {
+    "status": "NOT_RUN",
+    "reason": "genlayer-test unavailable"
+  },
+  "studionet": {
+    "status": "NOT_RUN",
+    "reason": "explicit chain/gas permission required"
+  },
+  "github_ci": {
+    "status": "PENDING",
+    "reason": "approved push to trigger CI"
+  },
+  "source_references": [
+    "https://docs.genlayer.com/developers/intelligent-contracts/testing",
+    "https://docs.genlayer.com/developers/intelligent-contracts/equivalence-principle",
+    "https://docs.genlayer.com/api-references/genlayer-linter"
+  ],
+  "release_gate": "NOT_READY",
+  "public_before_portal": true
+}
