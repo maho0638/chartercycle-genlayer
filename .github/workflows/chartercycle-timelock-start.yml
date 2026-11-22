@@ -1,0 +1,24 @@
+name: CharterCycle real 48-hour timelock initial quorum
+on:
+  push:
+    paths:
+      - "proofs/chartercycle_timelock_start.py"
+      - ".github/workflows/chartercycle-timelock-start.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  timelock-start:
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install GenLayer dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Pin exact contract version
+        run: sha256sum contracts/charter_cycle.py
+      - name: Deploy and confirm 2 of 3 real genesis votes for 48h lifecycle
+        run: gltest proofs/chartercycle_timelock_start.py -v -s --network studionet
