@@ -1,0 +1,28 @@
+name: Read-only Studionet receipt and validator audit
+on:
+  push:
+    paths:
+      - "scripts/studionet_receipt_audit.py"
+      - ".github/workflows/studionet-receipt-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  receipt-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Query six stored transactions, independent of test runner
+        run: python scripts/studionet_receipt_audit.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: read-only-studionet-status
+          path: studionet_status_audit.json
+          if-no-files-found: ignore
