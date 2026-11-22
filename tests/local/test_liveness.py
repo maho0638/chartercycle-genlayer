@@ -94,3 +94,17 @@ def test_healthy_timelock_is_not_archivable(ctx):
     c.finalize('amend_one')
     with pytest.raises(FakeUserError,match='not obsolete'):
         c.archive_obsolete('amend_one')
+
+
+def test_more_than_128_historical_proposals_are_not_a_governance_dead_end(ctx):
+    sdk,mod,c,t=ctx
+    # The old code permanently stopped at exactly 128 proposals. Every week
+    # gives two new authorized opportunities while preserving old IDs.
+    for week in range(70):
+        for slot in range(2):
+            propose(ctx,f'week_{week:03d}_{slot}',verdict='CONFLICT')
+        t[0]+=mod.PROPOSAL_PERIOD_SECONDS
+    assert c.get_proposal_count()==140
+    assert json.loads(c.get_proposal('week_000_0'))['status']=='BLOCKED'
+    propose(ctx,'week_070_0')
+    assert c.get_proposal_count()==141
