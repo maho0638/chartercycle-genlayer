@@ -3,7 +3,7 @@
   "date": "2026-11-22",
   "repo": "chartercycle-genlayer",
   "contract_path": "contracts/charter_cycle.py",
-  "source_sha256": "9385a0192864e8314546d16aa77278303c576404ecbba391164ea60270778231",
+  "source_sha256": "c5c218ec0e31e4b8edbf120efc3e26a99969126682b98ca062da19296d12b604",
   "local_fake_sdk_tests": {
     "status": "PASS",
     "passed": 30,
@@ -20,26 +20,37 @@
     "official": false
   },
   "genvm_lint": {
-    "status": "NOT_RUN",
-    "reason": "official linter unavailable"
+    "status": "PASS",
+    "official": true,
+    "checks": 3,
+    "source": "github_actions",
+    "run_url": "https://github.com/maho0638/chartercycle-genlayer/actions/runs/45045343123"
   },
   "official_direct_mode": {
-    "status": "NOT_RUN",
-    "reason": "genlayer-test unavailable"
+    "status": "PASS",
+    "passed": 5,
+    "total": 5,
+    "validator_reruns": true,
+    "mode": "official_direct_sdk_with_mock_llm",
+    "run_url": "https://github.com/maho0638/chartercycle-genlayer/actions/runs/45045343123"
   },
   "studionet": {
     "status": "NOT_RUN",
-    "reason": "explicit chain/gas permission required"
+    "reason": "explicit chain deployment and gas authorization required"
   },
   "github_ci": {
-    "status": "PENDING",
-    "reason": "approved push to trigger CI"
+    "status": "PASS",
+    "contract_commit": "bfcd01878357c9fcb399a4fa3c3bf9e9ee2e8714",
+    "run_id": 45045343123,
+    "run_url": "https://github.com/maho0638/chartercycle-genlayer/actions/runs/45045343123",
+    "job_id": 137278622623,
+    "conclusion": "success"
   },
   "source_references": [
     "https://docs.genlayer.com/developers/intelligent-contracts/testing",
     "https://docs.genlayer.com/developers/intelligent-contracts/equivalence-principle",
     "https://docs.genlayer.com/api-references/genlayer-linter"
   ],
-  "release_gate": "NOT_READY",
+  "release_gate": "BLOCKED_ON_STUDIONET_CHAIN_APPROVAL_AND_PUBLIC_PORTAL_REQUIREMENT",
   "public_before_portal": true
 }
