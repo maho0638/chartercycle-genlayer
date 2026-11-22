@@ -1,0 +1,23 @@
+name: CharterCycle 48-hour live timelock completion
+on:
+  push:
+    paths:
+      - "proofs/chartercycle_resumption_trigger.txt"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  resume-governance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned SDK
+        run: python -m pip install -r requirements.txt
+      - name: Verify source hash
+        run: sha256sum contracts/charter_cycle.py
+      - name: Finalize/enact only eligible pre-approved on-chain governance phase
+        run: gltest proofs/chartercycle_timelock_resume.py -v -s --network studionet
