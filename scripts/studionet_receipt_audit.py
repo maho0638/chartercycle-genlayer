@@ -12,6 +12,16 @@ TX = {
     "QuestForge/join": "0xb39b952d048fd0d3847bfb8a4e0ad4406b49cd11a87b7fe1da02e0a535cee2c9",
     "QuestForge/solve": "0x5e0ded8bbe753cdfdf571d3cf9870a814039f6af293f2582bfe2a9206327f8df",
     "QuestForge/scout": "0xf646b841e0f6ad070973527145f2117cc94ee41334f3a7be42286839fbcb423f",
+    "CharterCycle/quorum_propose": "0x64fecea121383944bfdb8bef4a28be741c97d47fc4fec7c2de1e3829d7487b3e",
+    "CharterCycle/quorum_vote1": "0x2e556010a7feab3cdad4dca3dd72e18b037bf4674914bb64e8f919d172cc83c9",
+    "CharterCycle/quorum_vote2": "0x005d0f9ae1f6f70dd299caebfac4135253dcd6f8f467cb42b15aca053769297a",
+    "FullWin/create": "0xfff83a152548ccf22e0e4a17fbd6452c3394be6042390239d38094a640e9b598",
+    "FullWin/join": "0x5aba39db722200f2d40cfabf102bb39321d8847de25ecfac4d229d84258b44c1",
+    "FullWin/solve0": "0xd663a74e5a85c93f684fced68999ff113bc52504a21013e38fadfea48716ba6f",
+    "FullWin/solve1": "0xdfc2c495bdc586cbf4b2e8223fbe17eade9d629af6f9e39582c7cb48c2eb4fc8",
+    "FullWin/scout2": "0xc0fbe93160f3b7efb262d02b470bd7c2182f68c87af986d19e519fd1c0bcf389",
+    "FullWin/scout3": "0x709dab247c7ba0d99b4069d3344da8501ca76ef521f772bed15601aac666e5cf",
+    "FullWin/solve4": "0xfc8fca8c6d656fa44dc50182bb7d55da87dd8f39611b3b0f7fd29845e24ce27b",
 }
 
 def rpc(method, params):
@@ -71,7 +81,7 @@ def main():
                     data[field]=str(result)[:300]
             except Exception as error:
                 data[field+"_unavailable"]=str(error)[:320]
-        if label in ("CharterCycle/propose", "QuestForge/solve"):
+        if label in ("CharterCycle/propose", "CharterCycle/quorum_propose", "QuestForge/solve") or label.startswith("FullWin/solve"):
             try:
                 transaction=rpc("eth_getTransactionByHash",[h])
                 if isinstance(transaction,dict):
@@ -99,7 +109,7 @@ def main():
             raise RuntimeError("Not accepted/finalized: "+label+" "+str(status))
     file=pathlib.Path("studionet_status_audit.json")
     file.write_text(json.dumps(snapshot,indent=2,sort_keys=True)+"\\n")
-    print("ALL_SIX_RECEIPT_STATUSES_CONFIRMED; FINALITY_IS_REPORTED_EXACTLY", flush=True)
+    print("ALL_RECORDED_RECEIPT_STATUSES_CONFIRMED; FINALITY_IS_REPORTED_EXACTLY", flush=True)
 
 if __name__ == "__main__":
     main()
