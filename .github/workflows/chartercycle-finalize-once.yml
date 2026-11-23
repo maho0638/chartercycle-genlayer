@@ -1,0 +1,22 @@
+name: CharterCycle one controlled live finalize with EVM proof
+on:
+  push:
+    paths:
+      - "proofs/finalize_once_with_diagnostics.py"
+      - ".github/workflows/chartercycle-finalize-once.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  finalize-once:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r requirements.txt
+      - run: sha256sum contracts/charter_cycle.py
+      - name: Finalize only if two-thirds quorum and close time validated
+        run: gltest proofs/finalize_once_with_diagnostics.py -v -s --network studionet
