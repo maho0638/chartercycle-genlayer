@@ -30,8 +30,7 @@ if(p.status!=="VOTING")throw Error("Unexpected stage; abort");
 const block=await rpc("eth_getBlockByNumber",["latest",false]);if(parseInt(block.timestamp,16)<CLOSES)throw Error("Voting not yet closed");
 let feeOpts=undefined;
 try {
- const quote=await client.estimateTransactionFeesForWrite({
-  address:CONTRACT,functionName:'finalize',args:[ID],account,
+ const quote=await client.estimateTransactionFees({
   leaderTimeunitsAllocation:125n,
   validatorTimeunitsAllocation:250n,
   executionBudgetPerRound:786500n,
@@ -40,6 +39,7 @@ try {
  });
  const fee=BigInt(quote.feeValue);
  console.log("MAINSDK_ESTIMATED_PROTOCOL_FEE="+fee.toString());
+ if(fee>1000000000000000000n)throw Error("Quote over 1 GEN safe bound; abort");
  // Studio supports fee budgeting; quote derived using native simulator, not an invented amount.
  feeOpts={distribution:quote.distribution,feeValue:quote.feeValue};
 } catch(e) {
