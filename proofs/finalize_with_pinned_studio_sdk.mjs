@@ -36,7 +36,7 @@ try {
   validatorTimeunitsAllocation:250n,
   executionBudgetPerRound:786500n,
   appealRounds:1n,
-  rotations:[0n],
+  rotations:[0n,0n],
  });
  const fee=BigInt(quote.feeValue);
  console.log("MAINSDK_ESTIMATED_PROTOCOL_FEE="+fee.toString());
