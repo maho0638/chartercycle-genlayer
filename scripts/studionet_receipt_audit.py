@@ -12,6 +12,7 @@ TX = {
     "QuestForge/join": "0xb39b952d048fd0d3847bfb8a4e0ad4406b49cd11a87b7fe1da02e0a535cee2c9",
     "QuestForge/solve": "0x5e0ded8bbe753cdfdf571d3cf9870a814039f6af293f2582bfe2a9206327f8df",
     "QuestForge/scout": "0xf646b841e0f6ad070973527145f2117cc94ee41334f3a7be42286839fbcb423f",
+    "CharterCycle/finalize": "0x44c23f0f082d7fca73573cef21f706f42701f6abf909051ed4c1a357dfced9a9",
     "CharterCycle/quorum_propose": "0x64fecea121383944bfdb8bef4a28be741c97d47fc4fec7c2de1e3829d7487b3e",
     "CharterCycle/quorum_vote1": "0x2e556010a7feab3cdad4dca3dd72e18b037bf4674914bb64e8f919d172cc83c9",
     "CharterCycle/quorum_vote2": "0x005d0f9ae1f6f70dd299caebfac4135253dcd6f8f467cb42b15aca053769297a",
