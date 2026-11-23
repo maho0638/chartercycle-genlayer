@@ -1,0 +1,23 @@
+name: CharterCycle finalize via Studio-aware GenLayerJS
+on:
+  push:
+    paths:
+      - "proofs/chartercycle_finalize_js.mjs"
+      - ".github/workflows/chartercycle-finalize-js.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install --no-save --ignore-scripts genlayer-js@1.1.8
+      - name: Verify original contract source checksum
+        run: sha256sum contracts/charter_cycle.py
+      - name: Finalize one preapproved proposal with Studio-aware SDK
+        run: node proofs/chartercycle_finalize_js.mjs
