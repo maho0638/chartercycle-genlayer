@@ -1,23 +1,33 @@
-name: CharterCycle 48-hour live timelock completion
+name: CharterCycle live time-lock enactment (Studio-aware SDK)
 on:
   push:
     paths:
       - "proofs/chartercycle_resumption_trigger.txt"
+      - "proofs/chartercycle_enact_studio_js.mjs"
+      - ".github/workflows/chartercycle-timelock-resume.yml"
   workflow_dispatch:
+
 permissions:
   contents: read
+
+concurrency:
+  group: chartercycle-single-proposal-enactment
+  cancel-in-progress: false
+
 jobs:
   resume-governance:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-node@v4
         with:
-          python-version: "3.12"
-      - name: Install pinned SDK
-        run: python -m pip install -r requirements.txt
-      - name: Verify source hash
-        run: sha256sum contracts/charter_cycle.py
-      - name: Finalize/enact only eligible pre-approved on-chain governance phase
-        run: gltest proofs/chartercycle_timelock_resume.py -v -s --network studionet
+          node-version: "22"
+      - name: Install source-pinned, official Studio-aware GenLayer JS SDK
+        run: npm install --no-save "github:genlayerlabs/genlayer-js#1b7f50a3a3f2963ea857941b0fb386081dd5c326"
+      - name: Verify original Python contract checksum (not a deployment)
+        run: |
+          sha256sum contracts/charter_cycle.py
+          echo "Existing contract only; no redeploy"
+      - name: Check governance guards; enact once if eligible; verify finalized status
+        run: node proofs/chartercycle_enact_studio_js.mjs
