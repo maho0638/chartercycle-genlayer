@@ -28,27 +28,19 @@ if(p.id!==ID||Number(p.yes)!==2||Number(p.no)!==0||Number(p.closes)!==CLOSES||Nu
 if(p.status==="TIMELOCK"||p.status==="ENACTED"){console.log("MAINSDK_NO_SEND_ALREADY_DONE");process.exit(0)}
 if(p.status!=="VOTING")throw Error("Unexpected stage; abort");
 const block=await rpc("eth_getBlockByNumber",["latest",false]);if(parseInt(block.timestamp,16)<CLOSES)throw Error("Voting not yet closed");
-let feeOpts=undefined;
-try {
- const quote=await client.estimateTransactionFees({
-  leaderTimeunitsAllocation:125n,
-  validatorTimeunitsAllocation:250n,
-  executionBudgetPerRound:786500n,
-  appealRounds:1n,
-  rotations:[0n,0n],
- });
- const fee=BigInt(quote.feeValue);
- console.log("MAINSDK_ESTIMATED_PROTOCOL_FEE="+fee.toString());
- if(fee>1000000000000000000n)throw Error("Quote over 1 GEN safe bound; abort");
- // Studio supports fee budgeting; quote derived using native simulator, not an invented amount.
- feeOpts={distribution:quote.distribution,feeValue:quote.feeValue};
-} catch(e) {
- console.log("MAINSDK_FEE_ESTIMATE_UNAVAILABLE="+String(e).slice(0,380));
- // Do NOT spend or submit if fee requirements cannot be independently assessed.
- const cfg=await rpc('sim_getFeeConfig',[]).catch(()=>null);
- console.log("MAINSDK_STUDIO_FEE_CONFIG="+JSON.stringify(cfg)?.slice(0,800));
- if(cfg&&JSON.stringify(cfg).includes('"enabled":true'))throw Error("Fee config enabled but estimation failed; abort");
-}
+const liveFees=await rpc('sim_getFeeConfig',[]);
+if(liveFees?.enabled!==true || !liveFees?.defaultFees?.distribution) throw Error('No verified Studio default fees; abort without sending');
+const rawFees=liveFees.defaultFees;
+const fee=BigInt(rawFees.feeValue);
+const dist=rawFees.distribution;
+const budget=BigInt(dist.executionBudgetPerRound);
+const policyFloor=BigInt(liveFees.policy.genvmStartBudgetFloor);
+if(fee<=0n || fee>1000000000000000000n || budget<policyFloor) throw Error('Live fee quote outside guarded bounds');
+if(!Array.isArray(dist.rotations)||dist.rotations.length!==Number(dist.appealRounds)+1)throw Error('Invalid live rotation allocations');
+for(const key of ['leaderTimeunitsAllocation','validatorTimeunitsAllocation','executionBudgetPerRound','maxPriceGenPerTimeUnit','storageFeeMaxGasPrice','receiptFeeMaxGasPrice'])if(BigInt(dist[key])<=0n)throw Error('Invalid live fee field '+key);
+console.log("MAINSDK_LIVE_PROTOCOL_FEE="+fee.toString());
+console.log("MAINSDK_LIVE_BUDGET="+budget.toString());
+const feeOpts=rawFees;
 let txId;
 try{
  txId=await client.writeContract({
