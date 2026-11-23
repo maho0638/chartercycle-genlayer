@@ -1,0 +1,20 @@
+name: Studio fee policy and transaction read-only audit
+on:
+  push:
+    paths:
+      - "proofs/read_tx_and_fee_policy.mjs"
+      - ".github/workflows/studio-fee-audit.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Read Studio fee policy and stored tx data (never sign)
+        run: node proofs/read_tx_and_fee_policy.mjs
