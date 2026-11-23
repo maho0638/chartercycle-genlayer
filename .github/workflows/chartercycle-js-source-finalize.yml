@@ -1,0 +1,24 @@
+name: CharterCycle Studio finalize with pinned SDK source
+on:
+  push:
+    paths:
+      - "proofs/finalize_with_pinned_studio_sdk.mjs"
+      - ".github/workflows/chartercycle-js-source-finalize.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  studio-finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install official SDK pinned to inspected source commit
+        run: npm install --no-save "github:genlayerlabs/genlayer-js#1b7f50a3a3f2963ea857941b0fb386081dd5c326"
+      - name: Exact contract sha256
+        run: sha256sum contracts/charter_cycle.py
+      - name: Perform at most one guarded finalize using Studio aware source SDK
+        run: node proofs/finalize_with_pinned_studio_sdk.mjs
